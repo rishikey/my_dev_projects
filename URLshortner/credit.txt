@@ -1,0 +1,4 @@
+//Author:  Rishikey yadav
+//Created: 1st NOV 2021
+
+Description:A mini project using Node.js,EJS,mongoDB to shorten the URL provided, and store it in DB.
