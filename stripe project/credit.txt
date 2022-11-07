@@ -1,0 +1,2 @@
+//author: rishikey yadav
+Description:a mini project utilising Stripe payment gateway to make payments.
