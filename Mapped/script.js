@@ -1,0 +1,37 @@
+/* author-Rishikey yadav
+date:12 nov 22
+description:Google maps clone using Mapbox */
+
+
+mapboxgl.accessToken =
+ "pk.eyJ1IjoiYmlkaGF5YWsiLCJhIjoiY2xhZHdvejUxMDB0eDN1cWo2MW12bXdxZyJ9._gQMcXN6tMMviKytjaIWNw"
+
+navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {
+  enableHighAccuracy: true
+})
+
+function successLocation(position) {
+  setupMap([position.coords.longitude, position.coords.latitude])
+}
+
+function errorLocation() {
+  setupMap([-2.24, 53.48])
+}
+
+function setupMap(center) {
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/streets-v11",
+    center: center,
+    zoom: 15
+  })
+
+  const nav = new mapboxgl.NavigationControl()
+  map.addControl(nav)
+
+  var directions = new MapboxDirections({
+    accessToken: mapboxgl.accessToken
+  })
+
+  map.addControl(directions, "top-left")
+}
