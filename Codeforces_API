@@ -1,0 +1,65 @@
+""" 
+ ॥जय श्री राम ॥
+ ॥ श्री गणेशाय नमः ॥
+ it's the WILL not the skill 
+
+"""
+
+import requests
+import time
+import hashlib
+import hmac
+
+def send_signed_request(api_key, secret, method, params):
+    # Generate the current time in Unix format
+    current_time = int(time.time())
+
+    # Construct the request URL
+    base_url = "https://codeforces.com/api/"
+    request_url = f"{base_url}{method}"
+
+    # Add the apiKey and time parameters
+    params["apiKey"] = api_key
+    params["time"] = current_time
+
+    # Sort the parameters lexicographically by key
+    sorted_params = sorted(params.items(), key=lambda x: x[0])
+
+    # Construct the string for generating the signature
+    signature_string = f"{method}?"
+    for key, value in sorted_params:
+        signature_string += f"{key}={value}&"
+    signature_string += f"#{secret}"
+
+    # Generate the signature using HMAC-SHA512
+    signature = hmac.new(secret.encode(), signature_string.encode(), hashlib.sha512).hexdigest()
+
+    # Add the apiSig parameter to the request URL
+    request_url += f"?{'&'.join([f'{key}={value}' for key, value in sorted_params])}&apiSig={signature}"
+
+    # Send the signed request
+    response = requests.get(request_url)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+# Specify your API key and secret
+api_key = "040745a515903acbd0be4e25f629a9b22309d223"
+secret = "467459d867c1da87803de9c0d9fb338ca3220fce"
+
+# Specify the method and parameters for the request
+method = "contest.hacks"
+params = {
+    "contestId": 566
+}
+
+# Send the signed request
+response_data = send_signed_request(api_key, secret, method, params)
+
+if response_data is not None:
+    # Process the response data
+    print(response_data)
+else:
+    print("Failed to retrieve data.")
